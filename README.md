@@ -69,5 +69,6 @@ Special thanks for [HugeIcons](https://hugeicons.com/) for providing me the favi
 ## Contact
 
 **Shoval Sabag**
+
 [GitHub](https://github.com/tmanoon)
 [LinkedIn](https://www.linkedin.com/in/shoval-sabag-2b2305308)
