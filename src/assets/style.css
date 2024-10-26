@@ -1,5 +1,6 @@
 html {
     min-height: 100vh;
+    background-color: aliceblue;
 }
 
 body {
@@ -10,7 +11,7 @@ body {
 
 header h1 {
     text-align: center;
-    margin-block: 1rem;
+    margin-block: 4rem 1rem;
 }
 
 .form-app {
@@ -18,15 +19,15 @@ header h1 {
 }
 
 .form-requirements, .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
+    gap: 1rem;
 }
 
 .form {
     margin-block: 2rem;
+}
+
+.form label {
+    font-weight: bolder;
 }
 
 .form-requirements button {
@@ -35,6 +36,11 @@ header h1 {
 
 input[type="file"] {
     opacity: 0;
+}
+
+.submit-btn {
+    padding-inline: 1.5rem;
+    margin-block-start: 1.5rem;
 }
 
 .modal {
