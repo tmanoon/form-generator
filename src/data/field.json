@@ -50,7 +50,6 @@
       "id": "dependant2",
       "type": "checkbox",
       "label": "Dependant2",
-      "required": true,
       "fieldDependencies": [
         {
           "id": "role",
