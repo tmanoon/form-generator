@@ -18,8 +18,8 @@
     <section class="form-app">
         <section class="form-requirements">
             <p> Please add your JSON file here to create a form</p>
-            <label class="btn" for="file-uploader">Choose a file</label>
-            <input id="file-uploader" type="file" id="json-file" accept=".json" />
+            <label class="btn" for="json-file">Choose a file</label>
+            <input type="file" id="json-file" accept=".json" />
             <button class="btn" onclick="handleJSONFile()">Generate</button>
         </section>
         <form class="form" onsubmit="submitForm(event)">
@@ -32,6 +32,6 @@
     </div>
 </body>
 
-<script src="./src/index.js"></script>
+<script src="./index.js"></script>
 
 </html>
