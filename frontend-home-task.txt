@@ -1,0 +1,98 @@
+# Frontend Developer Home Task: Dynamic Form Renderer
+
+## Time Expectation
+- This task is designed to take 3-5 hours
+- Please don't spend more than one working day on it
+- Focus on core requirements first, then add enhancements if time permits
+
+## The Task: Dynamic Form Generator
+Create a web application that generates and manages forms dynamically based on JSON configuration. Think of it as a mini form-building engine!
+
+### Core Requirements
+
+#### 1. JSON Configuration Parser
+Your application should accept JSON configurations like this:
+
+```typescript
+interface FormField {
+  id: string;
+  type: 'text' | 'number' | 'select' | 'checkbox' | 'email';
+  label: string;
+  required?: boolean;
+  validation?: {
+    min?: number;
+    max?: number;
+    pattern?: string;
+    options?: string[];  // for select fields
+  };
+  defaultValue?: string | number | boolean;
+}
+
+#### 2. Form Generation
+- Dynamically render form fields based on the JSON configuration
+- Support at least these field types:
+  - Text input
+  - Number input
+  - Select dropdown
+  - Checkbox
+- Implement field validation based on the configuration
+- Handle field dependencies (optional bonus)
+
+#### 3. Form Management
+- Implement real-time validation
+- Show appropriate error messages
+- Display a summary of form data on submission (console log is fine)
+- Handle form reset functionality
+
+### Technical Requirements
+- Use TypeScript 
+- Include basic CSS styling for usability - styling is not a focus for this task
+- Handle loading and error states
+
+### Bonus Points (Optional)
+- Add support for nested field groups
+- Implement custom validation rules
+- Add unit tests
+- Add form state persistence (local storage)
+- Create a nice UI/UX
+
+## What We're Looking For
+1. **Code Quality**
+   - Clean, maintainable code
+   - Good TypeScript practices
+   - Proper error handling
+   - Thoughtful component structure
+
+2. **Problem Solving**
+   - How you handle dynamic form generation
+   - Your approach to validation
+   - How you manage form state
+   - How you handle edge cases
+
+3. **Technical Understanding**
+   - DOM manipulation
+   - State management
+   - Event handling
+   - Type safety 
+
+## Submission Guidelines
+1. Create a new GitHub repository
+2. Include a README.md with:
+   - Setup instructions
+   - Explanation of your technical choices
+   - Any assumptions made
+   - Examples of supported JSON configurations
+3. Write clean, commented code
+4. Provide examples of different form configurations that work with your solution
+5. If possible create a github pages to show the frontend application compiled
+
+## Questions?
+If anything is unclear, please don't hesitate to ask! - you can call me or send me a message on LinkedIn
+
+## Some Tips
+- Start with a simple working version and then enhance it - make a mvp - minimum viable product first
+- Focus on making the core functionality robust
+- Think about edge cases (invalid JSON, missing fields, validation errors)
+- Consider user experience in your implementation
+
+Good luck! I look forward to seeing your solution! 🚀
