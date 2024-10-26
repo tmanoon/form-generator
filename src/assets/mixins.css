@@ -6,8 +6,8 @@
     cursor: pointer;
     transition: transform 0.3s;
     padding: .5rem 1rem;
-    margin-block-start: 1rem;
     font-family: Fira-Light, Tahoma;
+    font-size: 1rem;
 }
 
 .btn:hover {
