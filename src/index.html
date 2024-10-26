@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/style.css" />
+    <link rel="icon" sizes="130x130" href="./assets/favicon.svg" />
+    <title>Form Field Generator</title>
+</head>
+
+<body>
+    <header>
+        <h1>
+            Form Field Generator
+        </h1>
+    </header>
+    <section class="form-app">
+        <section class="form-requirements">
+            <p> Please add your JSON file here to create a form</p>
+            <input type="file" id="json-file" accept=".json" />
+            <button onclick="handleJSONFile()">Generate</button>
+        </section>
+        <form class="form" onsubmit="submitForm(event)">
+
+        </form>
+    </section>
+</body>
+
+<script src="./src/index.js"></script>
+
+</html>
