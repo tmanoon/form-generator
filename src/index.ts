@@ -6,7 +6,7 @@ var dependantFields: FormField[] | null = []
 function createForm(fields: FormField[]) {
     fieldsStack = fields.filter(field => !field.fieldDependencies)
     dependantFields = fields.filter(field => field.fieldDependencies)
-    const formEl = document.querySelector('.form') as Element
+    const formEl = document.querySelector('.form') as HTMLFormElement
     let form = ''
     for (let i = 0; i < fieldsStack.length; i++) {
         const currField = fieldsStack[i]
@@ -20,12 +20,12 @@ function createForm(fields: FormField[]) {
 }
 
 function getSubmitBtn() {
-    return '<button class="submit-btn">Submit</button>'
+    return '<button class="submit-btn btn">Submit</button>'
 }
 
 function submitForm(e: Event) {
     e.preventDefault()
-    alert('Form submitted successfully!')
+    displayModal('rgb(95, 195, 95)', 'Form submitted')
 }
 
 function setSelectedOption(el: HTMLSelectElement, value: string) {
@@ -61,7 +61,11 @@ function setValue(e: Event) {
     const el = e.target as HTMLInputElement | HTMLSelectElement;
     const id = el.id;
     const value = el.type === 'checkbox' ? el.checked : el.value;
-    el.setAttribute('value', el.value.toString())
+    if (el.type === 'checkbox') {
+        if (value.toString() === 'true') el.setAttribute('checked', value.toString())
+        else el.removeAttribute('checked')
+    }
+    else el.setAttribute('value', value.toString())
     if (el.type === 'select-one') setSelectedOption(el as HTMLSelectElement, el.value)
     if (dependantFields &&
         dependantFields.filter(field => field.fieldDependencies!.some(dependency => dependency.id === id && dependency.value === value))) isDependant = true
@@ -69,8 +73,7 @@ function setValue(e: Event) {
 }
 
 function checkForDependents(value: string | number | boolean, id: string) {
-
-    const formEl = document.querySelector('.form') as Element
+    const formEl = document.querySelector('.form') as HTMLFormElement
     if (dependantFields) {
         let relevantFields = dependantFields.filter(field => field.fieldDependencies!.find(dependency => dependency.id === id))
         relevantFields.forEach(field => {
@@ -110,9 +113,9 @@ function createSelectEl(field: FormField) {
 
 function handleJSONFile() {
     const fileInput = document.getElementById('json-file') as HTMLInputElement | null;
-    if (!fileInput) return alert('No JSON file provided') // MAKE MODAL
+    if (!fileInput) return displayModal('red', 'No JSON file provided')
     const file = fileInput.files?.[0] as Blob;
-    if (!file) return alert('No JSON file selected'); // MAKE MODAL
+    if (!file) return displayModal('red', 'No JSON file selected');
     const reader = new FileReader();
     reader.onload = function (event) {
         try {
@@ -122,8 +125,25 @@ function handleJSONFile() {
                 createForm(jsonData[keyName]);
             }
         } catch (error) {
-            console.error('Invalid JSON file:', error);
+            displayModal('red', `Invalid JSON file: ${error}`);
         }
     };
     reader.readAsText(file);
+    displayModal('rgb(95, 195, 95)', 'File uploaded successfully')
+}
+
+function closeModal() {
+    const modalEl = document.querySelector('.modal') as HTMLElement
+    modalEl.style.display = 'none'
+}
+
+function displayModal(clr: string, txt: string) {
+    const modalEl = document.querySelector('.modal') as HTMLElement
+    const pEl = modalEl.querySelector('p') as HTMLElement
+    modalEl.style.backgroundColor = clr
+    pEl.innerText = txt
+    modalEl.style.display = 'flex'
+    setTimeout(() => {
+        closeModal()
+    }, 3000)
 }

@@ -22,7 +22,7 @@ function createForm(fields) {
         + getSubmitBtn();
 }
 function getSubmitBtn() {
-    return '<button class="submit-btn">Submit</button>';
+    return '<button class="submit-btn btn">Submit</button>';
 }
 function submitForm(e) {
     e.preventDefault();
@@ -120,10 +120,10 @@ function handleJSONFile() {
     var _a;
     const fileInput = document.getElementById('json-file');
     if (!fileInput)
-        return alert('No JSON file provided'); // MAKE MODAL
+        return displayModal('red', 'No JSON file provided'); // MAKE MODAL
     const file = (_a = fileInput.files) === null || _a === void 0 ? void 0 : _a[0];
     if (!file)
-        return alert('No JSON file selected'); // MAKE MODAL
+        return displayModal('red', 'No JSON file provided'); // MAKE MODAL
     const reader = new FileReader();
     reader.onload = function (event) {
         var _a;
@@ -139,4 +139,17 @@ function handleJSONFile() {
         }
     };
     reader.readAsText(file);
+}
+function closeModal() {
+    var modalEl = document.querySelector('.modal');
+    modalEl.style.display = 'none';
+}
+function displayModal(clr, txt) {
+    var modalEl = document.querySelector('.modal');
+    modalEl.style.backgroundColor = clr;
+    modalEl.innerText = txt;
+    modalEl.style.display = 'flex';
+    setTimeout(() => {
+        closeModal();
+    }, 3000);
 }
