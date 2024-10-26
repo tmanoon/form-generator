@@ -1,0 +1,62 @@
+{
+  "fields": [
+    {
+      "id": "name",
+      "type": "text",
+      "label": "Full Name",
+      "required": true,
+      "validation": {
+        "pattern": "^[a-zA-Z\\s]{2,50}$"
+      }
+    },
+    {
+      "id": "age",
+      "type": "number",
+      "label": "Age",
+      "validation": {
+        "min": 15,
+        "max": 100
+      }
+    },
+    {
+      "id": "role",
+      "type": "select",
+      "label": "Role",
+      "validation": {
+        "options": [
+          "Developer",
+          "Designer",
+          "Manager"
+        ]
+      },
+      "required": true
+    },
+    {
+      "id": "available",
+      "type": "text",
+      "label": "Dependant",
+      "validation": {
+        "pattern": "^[a-zA-Z\\s]{2,50}$"
+      },
+      "required": true,
+      "fieldDependencies": [
+        {
+          "id": "role",
+          "value": "Designer"
+        }
+      ]
+    },
+    {
+      "id": "dependant2",
+      "type": "checkbox",
+      "label": "Dependant2",
+      "required": true,
+      "fieldDependencies": [
+        {
+          "id": "role",
+          "value": "Manager"
+        }
+      ]
+    }
+  ]
+}
