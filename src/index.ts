@@ -4,6 +4,7 @@ var fieldsStack: FormField[] = []
 var dependantFields: FormField[] | null = []
 
 function createForm(fields: FormField[]) {
+    toggleFormRequirements('off')
     fieldsStack = fields.filter(field => !field.fieldDependencies)
     dependantFields = fields.filter(field => field.fieldDependencies)
     const formEl = document.querySelector('.form') as HTMLFormElement
@@ -17,6 +18,12 @@ function createForm(fields: FormField[]) {
     }
     formEl.innerHTML = form
         + getSubmitBtn()
+}
+
+function toggleFormRequirements(mode: string) {
+    const sectionEl = document.querySelector('.form-requirements') as HTMLElement
+    if(mode === 'off') sectionEl.style.display = 'none'
+    else sectionEl.style.display = 'flex'
 }
 
 function getSubmitBtn() {

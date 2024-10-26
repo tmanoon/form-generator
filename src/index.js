@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fieldsStack = [];
 var dependantFields = [];
 function createForm(fields) {
+    toggleFormRequirements('off');
     fieldsStack = fields.filter(function (field) { return !field.fieldDependencies; });
     dependantFields = fields.filter(function (field) { return field.fieldDependencies; });
     var formEl = document.querySelector('.form');
@@ -20,6 +21,13 @@ function createForm(fields) {
     }
     formEl.innerHTML = form
         + getSubmitBtn();
+}
+function toggleFormRequirements(mode) {
+    var sectionEl = document.querySelector('.form-requirements');
+    if (mode === 'off')
+        sectionEl.style.display = 'none';
+    else
+        sectionEl.style.display = 'flex';
 }
 function getSubmitBtn() {
     return '<button class="submit-btn btn">Submit</button>';
