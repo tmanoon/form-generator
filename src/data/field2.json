@@ -1,0 +1,61 @@
+{
+    "fields": [
+      {
+        "id": "email",
+        "type": "email",
+        "label": "Email Address",
+        "required": true,
+        "validation": {
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        }
+      },
+      {
+        "id": "phone",
+        "type": "text",
+        "label": "Phone Number",
+        "validation": {
+          "pattern": "^\\+?[0-9]{10,15}$"
+        }
+      },
+      {
+        "id": "experience",
+        "type": "select",
+        "label": "Years of Experience",
+        "validation": {
+          "options": [
+            "0-1",
+            "2-4",
+            "5-7",
+            "8+"
+          ]
+        },
+        "required": true
+      },
+      {
+        "id": "certification",
+        "type": "text",
+        "label": "Certification",
+        "validation": {
+          "pattern": "^[a-zA-Z\\s]{2,100}$"
+        },
+        "required": true,
+        "fieldDependencies": [
+          {
+            "id": "experience",
+            "value": "5-7"
+          }
+        ]
+      },
+      {
+        "id": "remote",
+        "type": "checkbox",
+        "label": "Remote Work Available",
+        "fieldDependencies": [
+          {
+            "id": "experience",
+            "value": "8+"
+          }
+        ]
+      }
+    ]
+  }
