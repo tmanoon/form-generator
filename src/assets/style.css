@@ -29,8 +29,7 @@ header h1 {
     margin-block: 2rem;
 }
 
-.submit-btn, .form-requirements button {
-    padding: .5rem 1rem;
+.form-requirements button {
     margin-block-start: 1rem;
 }
 
