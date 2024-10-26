@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fieldsStack = [];
 var dependantFields = [];
 function createForm(fields) {
+    toggleFormRequirements('off');
     fieldsStack = fields.filter(field => !field.fieldDependencies);
     dependantFields = fields.filter(field => field.fieldDependencies);
     const formEl = document.querySelector('.form');
@@ -20,13 +21,21 @@ function createForm(fields) {
     }
     formEl.innerHTML = form
         + getSubmitBtn();
+    updateStorage();
+}
+function toggleFormRequirements(mode) {
+    const sectionEl = document.querySelector('.form-requirements');
+    if (mode === 'off')
+        sectionEl.style.display = 'none';
+    else
+        sectionEl.style.display = 'flex';
 }
 function getSubmitBtn() {
     return '<button class="submit-btn btn">Submit</button>';
 }
 function submitForm(e) {
     e.preventDefault();
-    alert('Form submitted successfully!');
+    displayModal('rgb(95, 195, 95)', 'Form submitted');
 }
 function setSelectedOption(el, value) {
     Array.from(el.options).forEach(option => option.removeAttribute('selected'));
@@ -35,11 +44,11 @@ function setSelectedOption(el, value) {
         selectedOption.setAttribute('selected', 'true');
 }
 function createCheckboxEl(field) {
-    let checkboxStr = `<input type="checkbox" id="${field.id}" name="${field.id}" onchange="setValue(event)" ${field.required ? 'required' : ''}`;
+    let checkboxStr = `<div class="checkbox-container flex"><input type="checkbox" id="${field.id}" name="${field.id}" onchange="setValue(event)" ${field.required ? 'required' : ''}`;
     if (typeof field.defaultValue === 'boolean' && field.defaultValue)
         checkboxStr += ' checked';
     checkboxStr += ' />';
-    checkboxStr += `<label for="${field.id}">${field.label}</label>`;
+    checkboxStr += `<label for="${field.id}">${field.label}</label></div>`;
     return checkboxStr;
 }
 function createInputEl(field) {
@@ -55,7 +64,7 @@ function createInputEl(field) {
         if (field.validation.max && field.type === 'number')
             inputStr += ` max="${field.validation.max}"`;
         if (field.validation.pattern)
-            inputStr += ` pattern="${field.validation.pattern}"`;
+            inputStr += ` pattern="${field.validation.pattern}" placeholder="Format ${field.validation.pattern}"`;
     }
     inputStr += ` />`;
     return inputStr;
@@ -65,7 +74,15 @@ function setValue(e) {
     const el = e.target;
     const id = el.id;
     const value = el.type === 'checkbox' ? el.checked : el.value;
-    el.setAttribute('value', el.value.toString());
+    updateState(id, value);
+    if (el.type === 'checkbox') {
+        if (value.toString() === 'true')
+            el.setAttribute('checked', value.toString());
+        else
+            el.removeAttribute('checked');
+    }
+    else
+        el.setAttribute('value', value.toString());
     if (el.type === 'select-one')
         setSelectedOption(el, el.value);
     if (dependantFields &&
@@ -73,6 +90,27 @@ function setValue(e) {
         isDependant = true;
     if (isDependant)
         checkForDependents(value, id);
+}
+function updateState(id, value) {
+    const isDependant = dependantFields === null || dependantFields === void 0 ? void 0 : dependantFields.find(field => field.id === id);
+    let fieldToUpdateIdx;
+    if (isDependant) {
+        fieldToUpdateIdx = dependantFields === null || dependantFields === void 0 ? void 0 : dependantFields.findIndex(field => field.id === id);
+        dependantFields[fieldToUpdateIdx].value = value;
+        console.log(dependantFields[fieldToUpdateIdx]);
+    }
+    else {
+        fieldToUpdateIdx = fieldsStack.findIndex(field => field.id === id);
+        fieldsStack[fieldToUpdateIdx].value = value;
+        console.log(fieldsStack[fieldToUpdateIdx]);
+    }
+    updateStorage();
+}
+function updateStorage() {
+    if (dependantFields === null || dependantFields === void 0 ? void 0 : dependantFields.length)
+        localStorage.setItem('FIELD_KEY', JSON.stringify([...fieldsStack, ...dependantFields]));
+    else
+        localStorage.setItem('FIELD_KEY', JSON.stringify([...fieldsStack]));
 }
 function checkForDependents(value, id) {
     const formEl = document.querySelector('.form');
@@ -101,7 +139,6 @@ function checkForDependents(value, id) {
                 elsStrToAdd += createSelectEl(field);
         }
         formEl.querySelector('button').remove();
-        console.log(elsStrToAdd);
         formEl.innerHTML += elsStrToAdd + getSubmitBtn();
     }
 }
@@ -120,10 +157,10 @@ function handleJSONFile() {
     var _a;
     const fileInput = document.getElementById('json-file');
     if (!fileInput)
-        return displayModal('red', 'No JSON file provided'); // MAKE MODAL
+        return displayModal('red', 'No JSON file provided');
     const file = (_a = fileInput.files) === null || _a === void 0 ? void 0 : _a[0];
     if (!file)
-        return displayModal('red', 'No JSON file provided'); // MAKE MODAL
+        return displayModal('red', 'No JSON file selected');
     const reader = new FileReader();
     reader.onload = function (event) {
         var _a;
@@ -135,19 +172,21 @@ function handleJSONFile() {
             }
         }
         catch (error) {
-            console.error('Invalid JSON file:', error);
+            displayModal('red', `Invalid JSON file: ${error}`);
         }
     };
     reader.readAsText(file);
+    displayModal('rgb(95, 195, 95)', 'File uploaded successfully');
 }
 function closeModal() {
-    var modalEl = document.querySelector('.modal');
+    const modalEl = document.querySelector('.modal');
     modalEl.style.display = 'none';
 }
 function displayModal(clr, txt) {
-    var modalEl = document.querySelector('.modal');
+    const modalEl = document.querySelector('.modal');
+    const pEl = modalEl.querySelector('p');
     modalEl.style.backgroundColor = clr;
-    modalEl.innerText = txt;
+    pEl.innerText = txt;
     modalEl.style.display = 'flex';
     setTimeout(() => {
         closeModal();

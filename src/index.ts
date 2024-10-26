@@ -18,6 +18,7 @@ function createForm(fields: FormField[]) {
     }
     formEl.innerHTML = form
         + getSubmitBtn()
+   updateStorage()
 }
 
 function toggleFormRequirements(mode: string) {
@@ -42,10 +43,10 @@ function setSelectedOption(el: HTMLSelectElement, value: string) {
 }
 
 function createCheckboxEl(field: FormField) {
-    let checkboxStr = `<input type="checkbox" id="${field.id}" name="${field.id}" onchange="setValue(event)" ${field.required ? 'required' : ''}`
+    let checkboxStr = `<div class="checkbox-container flex"><input type="checkbox" id="${field.id}" name="${field.id}" onchange="setValue(event)" ${field.required ? 'required' : ''}`
     if (typeof field.defaultValue === 'boolean' && field.defaultValue) checkboxStr += ' checked'
     checkboxStr += ' />'
-    checkboxStr += `<label for="${field.id}">${field.label}</label>`
+    checkboxStr += `<label for="${field.id}">${field.label}</label></div>`
     return checkboxStr
 }
 
@@ -57,7 +58,7 @@ function createInputEl(field: FormField) {
     if (field.validation) {
         if (field.validation.min && field.type === 'number') inputStr += ` min="${field.validation.min}"`
         if (field.validation.max && field.type === 'number') inputStr += ` max="${field.validation.max}"`
-        if (field.validation.pattern) inputStr += ` pattern="${field.validation.pattern}"`
+        if (field.validation.pattern) inputStr += ` pattern="${field.validation.pattern}" placeholder="Format ${field.validation.pattern}"`
     }
     inputStr += ` />`
     return inputStr
@@ -68,6 +69,7 @@ function setValue(e: Event) {
     const el = e.target as HTMLInputElement | HTMLSelectElement;
     const id = el.id;
     const value = el.type === 'checkbox' ? el.checked : el.value;
+    updateState(id, value)
     if (el.type === 'checkbox') {
         if (value.toString() === 'true') el.setAttribute('checked', value.toString())
         else el.removeAttribute('checked')
@@ -77,6 +79,24 @@ function setValue(e: Event) {
     if (dependantFields &&
         dependantFields.filter(field => field.fieldDependencies!.some(dependency => dependency.id === id && dependency.value === value))) isDependant = true
     if (isDependant) checkForDependents(value, id)
+}
+
+function updateState(id: string, value: string | boolean) {
+    const isDependant = dependantFields?.find(field => field.id === id)
+    let fieldToUpdateIdx
+    if (isDependant) {
+        fieldToUpdateIdx = dependantFields?.findIndex(field => field.id === id)!
+        dependantFields![fieldToUpdateIdx].value = value
+    } else {
+        fieldToUpdateIdx = fieldsStack.findIndex(field => field.id === id)
+        fieldsStack![fieldToUpdateIdx].value = value
+    }
+    updateStorage()
+}
+
+function updateStorage() {
+    if(dependantFields?.length) localStorage.setItem('FIELD_KEY', JSON.stringify([...fieldsStack, ...dependantFields!]))
+    else localStorage.setItem('FIELD_KEY', JSON.stringify([...fieldsStack]))
 }
 
 function checkForDependents(value: string | number | boolean, id: string) {
@@ -101,7 +121,6 @@ function checkForDependents(value: string | number | boolean, id: string) {
             else if (field.type === 'select') elsStrToAdd += createSelectEl(field)
         }
         formEl.querySelector('button')!.remove()
-        console.log(elsStrToAdd)
         formEl.innerHTML += elsStrToAdd + getSubmitBtn()
     }
 }
