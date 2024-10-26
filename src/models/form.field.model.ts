@@ -12,6 +12,6 @@ export interface FormField {
         options?: string[];
     };
     defaultValue?: string | number | boolean;
-    fieldDependencies?: FieldDependency[],
-    value?: string | boolean // An interface I created to describe the field and its value/values
+    fieldDependencies?: FieldDependency[], // An interface I created to describe the field and its value/values
+    value?: string | boolean 
 }
